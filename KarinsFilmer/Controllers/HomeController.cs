@@ -5,7 +5,8 @@ using System.Web.Mvc;
 
 namespace KarinsFilmer.Controllers
 {
-    //[Authorize]
+    [Authorize]
+    [RequireHttps]
     public class HomeController : Controller
     {
         public ActionResult Index()

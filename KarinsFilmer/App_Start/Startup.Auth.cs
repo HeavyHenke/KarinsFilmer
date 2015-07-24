@@ -79,15 +79,15 @@ namespace KarinsFilmer
             //    consumerKey: "",
             //    consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            //    appId: "",
-            //    appSecret: "");
+            app.UseFacebookAuthentication(
+                appId: "1446880702287959",
+                appSecret: "13754c119b104268870e02ca0d885b71");
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "1039160978114-vmtur016atkbq80c9ukiu5sqaer41auk.apps.googleusercontent.com",
+                ClientSecret = "e32Riprl_vXLcqLL87mkKyqn"
+            });
         }
     }
 }
