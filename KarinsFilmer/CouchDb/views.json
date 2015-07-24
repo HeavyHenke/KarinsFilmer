@@ -1,0 +1,21 @@
+﻿{
+  "_id": "_design/views",
+  "language": "javascript",
+  "views": {
+    "movies": {
+      "map": "function(doc) { if (doc.type == 'MovieRating')  emit(doc.movie, doc.rating) }",
+      "reduce": "function(keys, values) { return { 'mean' : 1.0*sum(values) / values.length, 'count' : values.length} ; }"
+    },
+    "duplicates": {
+      "map": "function(doc) { if (doc.type == 'MovieRating')  emit({'user': doc.user, 'movie' : doc.movie}, doc.rating) }",
+      "reduce": "function(keys, values) { return values.length; }"
+    },
+    "userRatings": {
+      "map": "function(doc) { if (doc.type == 'MovieRating')  emit(doc.user, doc.rating); }",
+      "reduce": "function(keys, values) { return {'count':values.length, 'mean': 1.0*sum(values) / values.length}; }"
+    },
+    "allRatings": {
+      "map": "function(doc) { if (doc.type == 'MovieRating')  emit(doc._id, doc); }"
+    }
+  }
+}
