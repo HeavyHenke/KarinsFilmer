@@ -51,6 +51,9 @@ namespace KarinsFilmer
         private static JObject ReadViewFileFromSolution()
         {
             var resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("KarinsFilmer.CouchDb.views.json");
+            if(resourceStream == null)
+                throw new Exception("Could not find couchdb view resources");
+
             var reader = new StreamReader(resourceStream, Encoding.UTF8, true, 1024, false);
             var stringFromFile = reader.ReadToEnd();
 
