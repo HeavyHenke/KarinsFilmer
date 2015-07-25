@@ -15,7 +15,7 @@
       "reduce": "function(keys, values) { return {'count':values.length, 'mean': 1.0*sum(values) / values.length}; }"
     },
     "allRatings": {
-      "map": "function(doc) { if (doc.type == 'MovieRating')  emit(doc._id, doc); }"
+      "map": "function(doc) { if (doc.Type == 'MovieRating')  emit(doc._id, doc); }"
     }
   }
 }

@@ -8,7 +8,6 @@ namespace KarinsFilmer.CouchDb.Entities
 {
     public class CouchObject
     {
-        [JsonIgnore] // Created by db
         public string Id { get; set; }
     }
 }
