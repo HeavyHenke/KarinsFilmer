@@ -25,11 +25,11 @@ namespace KarinsFilmer.CouchDb
             }
         }
 
-        public void AddMovieRating(MovieRating movieRating)
+        public void Add(CouchObject obj)
         {
-            var document = JsonConvert.SerializeObject(movieRating);
+            var document = JsonConvert.SerializeObject(obj);
             var id = CreateDocument(document);
-            movieRating.Id = id;
+            obj.Id = id;
         }
     }
 }
