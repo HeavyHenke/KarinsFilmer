@@ -49,8 +49,9 @@ namespace KarinsFilmer
         }
 
         private static JObject ReadViewFileFromSolution()
-        {            
-            var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("KarinsFilmer.CouchDb.views.json"), Encoding.UTF8, true, 1024, false);
+        {
+            var resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("KarinsFilmer.CouchDb.views.json");
+            var reader = new StreamReader(resourceStream, Encoding.UTF8, true, 1024, false);
             var stringFromFile = reader.ReadToEnd();
 
             return JsonConvert.DeserializeObject<JObject>(stringFromFile);
