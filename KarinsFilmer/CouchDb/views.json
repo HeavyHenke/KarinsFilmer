@@ -4,7 +4,7 @@
   "views": {
     "movies": {
       "map": "function(doc) { if (doc.type == 'MovieRating')  emit(doc.movie, doc.rating) }",
-      "reduce": "function(keys, values) { return { 'mean' : 1.0*sum(values) / values.length, 'count' : values.length} ; }"
+      "reduce": "function(keys, values, rereduce) { \n\n  // This computes the standard deviation of the mapped results\n  var stdDeviation=0.0;\n  var count=0;\n  var total=0.0;\n  var sqrTotal=0.0;\n\n  if (!rereduce) {\n    // This is the reduce phase, we are reducing over emitted values from\n    // the map functions.\n    for(var i in values) {\n      total = total + values[i];\n      sqrTotal = sqrTotal + (values[i] * values[i]);\n    }\n    count = values.length;\n  }\n  else {\n    // This is the rereduce phase, we are re-reducing previosuly\n    // reduced values.\n    for(var i in values) {\n      count = count + values[i].count;\n      total = total + values[i].total;\n      sqrTotal = sqrTotal + values[i].sqrTotal;\n    }\n  }\n\n  var variance =  (sqrTotal - ((total * total)/count)) / count;\n  stdDeviation = Math.sqrt(variance);\n\n  // the reduce result. It contains enough information to be rereduced\n  // with other reduce results.\n  return {\"stdDeviation\":stdDeviation, \"count\" : count, \"mean\" : total/count};\n}"
     },
     "duplicates": {
       "map": "function(doc) { if (doc.type == 'MovieRating')  emit({'user': doc.user, 'movie' : doc.movie}, doc.rating) }",
