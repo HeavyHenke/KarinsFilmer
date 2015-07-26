@@ -1,29 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using MyCouch;
+using KarinsFilmer.CouchDb.Entities;
 
 namespace KarinsFilmer.CouchDb
 {
     class CovarianceCalculator
     {
+        private readonly CouchRepository _couchRepository;
+        private Dictionary<string, MovieInformationRow> _movieInformation;
+        private List<AllRatingsRow> _allRatings;
+
+        public CovarianceCalculator(CouchRepository couchRepository)
+        {
+            _couchRepository = couchRepository;
+        }
+
         public void CalculateData()
         {
             DateTime start = DateTime.UtcNow;
 
-            List<AllRatingsRow> rows;
-            using (var db = new MyCouchClient("http://127.0.0.1:5984/karinsfilmer"))
-            {
-                using (var c = new MyCouchStore(db))
-                {
-                    var query = new Query("views", "allRatings");
-                    query.Reduce = false;
-                    rows = c.QueryAsync<AllRatingsRow>(query).Result.Select(r => r.Value).ToList();
-                }
-            }
+            ReadInformationFromDatabase();
 
-            List<string> movies = rows.Select(r => r.Movie).Distinct().ToList();
+            List<string> movies = _movieInformation.Keys.ToList();
             int num = 0;
 
             var variance = new Dictionary<Tuple<string, string>, double>();
@@ -32,7 +31,7 @@ namespace KarinsFilmer.CouchDb
             {
                 for (int j = i + 1; j < movies.Count; j++)
                 {
-                    var val = CalculateCovariance(rows, movies[i], movies[j]);
+                    var val = CalculateCovariance(movies[i], movies[j]);
                     if (val < 0)
                         val = val / 2;
 
@@ -46,10 +45,10 @@ namespace KarinsFilmer.CouchDb
             }
 
 
-            SuggestionsForUser(rows, movies, variance, "Karin");
-            SuggestionsForUser(rows, movies, variance, "Mimmi");
-            SuggestionsForUser(rows, movies, variance, "Staffan");
-            SuggestionsForUser(rows, movies, variance, "Henrik");
+            SuggestionsForUser(variance, "Karin");
+            SuggestionsForUser(variance, "Mimmi");
+            SuggestionsForUser(variance, "Staffan");
+            SuggestionsForUser(variance, "Henrik");
 
             DateTime stop = DateTime.UtcNow;
             var duraction = (stop - start).TotalMilliseconds;
@@ -57,12 +56,17 @@ namespace KarinsFilmer.CouchDb
             Console.WriteLine($"Calculation time {duraction} ms");
         }
 
-        private static void SuggestionsForUser(List<AllRatingsRow> rows, List<string> movies, Dictionary<Tuple<string, string>, double> variance, string user)
+        private void ReadInformationFromDatabase()
         {
-            var scoreByHenrik = rows.Where(r => r.User == user).ToList();
-            var moviesSeenByHenrik = scoreByHenrik.Select(r => r.Movie).ToList();
-            var moviesNotSeenByHenrik = movies.Except(moviesSeenByHenrik).ToList();
+            _movieInformation = _couchRepository.GetAllMovieInformation().ToDictionary(key => key.MovieTitle);
+            _allRatings = _couchRepository.GetAllMovieRatings2().ToList();
+        }
 
+        private void SuggestionsForUser(Dictionary<Tuple<string, string>, double> variance, string user)
+        {
+            var scoreByHenrik = _allRatings.Where(r => r.User == user).ToList();
+            var moviesSeenByHenrik = scoreByHenrik.Select(r => r.Movie).ToList();
+            var moviesNotSeenByHenrik = _movieInformation.Keys.Except(moviesSeenByHenrik).ToList();
 
             Console.WriteLine();
             Console.WriteLine($"Movies not seen by {user}:");
@@ -90,9 +94,9 @@ namespace KarinsFilmer.CouchDb
             }
         }
 
-        private static double CalculateCovariance(List<AllRatingsRow> rows, string movie1, string movie2)
+        private double CalculateCovariance(string movie1, string movie2)
         {
-            var byUser = rows.ToLookup(r => r.User);
+            var byUser = _allRatings.ToLookup(r => r.User);
             var samples = new List<Tuple<double, double>>();
             foreach (var u in byUser)
             {
@@ -116,7 +120,6 @@ namespace KarinsFilmer.CouchDb
             if (lower == 0) return 0;
             return upper / lower;
         }
-
 
     }
 }

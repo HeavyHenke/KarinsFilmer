@@ -3,7 +3,7 @@ namespace KarinsFilmer.CouchDb
     /// <summary>
     /// Temporary class used int Henriks database, should be replaced by MovieRating
     /// </summary>
-    class AllRatingsRow
+    public class AllRatingsRow
     {
         public string Id { get; set; }
         public string Rev { get; set; }
