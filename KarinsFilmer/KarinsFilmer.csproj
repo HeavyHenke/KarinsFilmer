@@ -227,6 +227,8 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MeController.cs" />
+    <Compile Include="CouchDb\Entities\AllRatingsRow.cs" />
+    <Compile Include="CouchDb\CovarianceCalculator.cs" />
     <Compile Include="CouchDb\CouchRepository.cs" />
     <Compile Include="CouchDb\Entities\CouchObject.cs" />
     <Compile Include="CouchDb\Entities\MovieRating.cs" />
