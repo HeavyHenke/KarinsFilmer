@@ -12,6 +12,8 @@ namespace KarinsFilmer.CouchDb
         private List<AllRatingsRow> _allRatings;
         private Dictionary<Tuple<string, string>, double> _variance;
 
+        private bool HasCalculatedData { get; set; }
+
         public CovarianceCalculator(CouchRepository couchRepository)
         {
             _couchRepository = couchRepository;
@@ -25,16 +27,15 @@ namespace KarinsFilmer.CouchDb
             suggestions.AddRange(SuggestionsForUser(userName));
             if (suggestions.Count < 10)
             {
-                var scoreByUser = _allRatings.Where(r => r.User == userName);
-                var moviesSeenByUser = scoreByUser.Select(r => r.Movie);
-                var excludeMovies = new HashSet<string>(_movieInformation.Keys.Except(moviesSeenByUser));
+                var moviesSeenByUser = _allRatings.Where(r => r.User == userName).Select(r => r.Movie).Distinct();
+                var excludeMovies = new HashSet<string>(moviesSeenByUser);
                 foreach (var s in suggestions)
                     excludeMovies.Add(s);
 
                 var additionalSuggestions = _movieInformation.Where(mi => excludeMovies.Contains(mi.Key) == false)
                     .OrderByDescending(m => m.Value.Count)
                     .ThenByDescending(m2 => m2.Value.Mean)
-                    .Take(suggestions.Count - 10);
+                    .Take(10 - suggestions.Count);
                 
                 suggestions.AddRange(additionalSuggestions.Select(m3 => m3.Key));
             }
@@ -44,7 +45,9 @@ namespace KarinsFilmer.CouchDb
 
         public void CalculateData()
         {
-            DateTime start = DateTime.UtcNow;
+            if (HasCalculatedData)
+                return;
+            HasCalculatedData = true;
 
             ReadInformationFromDatabase();
 
@@ -63,28 +66,13 @@ namespace KarinsFilmer.CouchDb
 
                     if (val != 0)
                     {
-                        Console.WriteLine($"{movies[i]} - {movies[j]} => {val}");
                         _variance.Add(Tuple.Create(movies[i], movies[j]), val);
                         _variance.Add(Tuple.Create(movies[j], movies[i]), val);
                     }
                 }
             }
-
-
-            DateTime stop = DateTime.UtcNow;
-            var duraction = (stop - start).TotalMilliseconds;
-            Console.WriteLine();
-            Console.WriteLine($"Calculation time {duraction} ms");
         }
-
-        internal void PrintSuggestionsFor(string user)
-        {
-            foreach (var movie in GetSuggestionsForUser(user))
-            {
-                Console.WriteLine(movie);
-            }
-        }
-            
+           
 
         private void ReadInformationFromDatabase()
         {
@@ -99,9 +87,6 @@ namespace KarinsFilmer.CouchDb
             var scoreByUser = _allRatings.Where(r => r.User == user).ToList();
             var moviesSeenByUser = scoreByUser.Select(r => r.Movie).ToList();
             var moviesNotSeenByUser = _movieInformation.Keys.Except(moviesSeenByUser).ToList();
-
-            Console.WriteLine();
-            Console.WriteLine($"Movies not seen by {user}:");
 
             foreach (var movie in moviesNotSeenByUser)
             {
@@ -160,8 +145,5 @@ namespace KarinsFilmer.CouchDb
             }
             return samples;
         }
-
-
-
     }
 }
