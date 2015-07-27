@@ -130,18 +130,7 @@ namespace KarinsFilmer.CouchDb
 
         private double CalculateCovariance(string movie1, string movie2)
         {
-            var byUser = _allRatings.ToLookup(r => r.User);
-            var samples = new List<Tuple<double, double>>();
-            foreach (var u in byUser)
-            {
-                var m1 = u.FirstOrDefault(m => m.Movie == movie1);
-                if (m1 == null) continue;
-
-                var m2 = u.FirstOrDefault(m => m.Movie == movie2);
-                if (m2 == null) continue;
-
-                samples.Add(Tuple.Create((double)m1.Rating, (double)m2.Rating));
-            }
+            var samples = GetSampelsWithBothMovies(movie1, movie2);
 
             if (samples.Count < 2) return 0;
 
@@ -154,6 +143,25 @@ namespace KarinsFilmer.CouchDb
             if (lower == 0) return 0;
             return upper / lower;
         }
+
+        private List<Tuple<double, double>> GetSampelsWithBothMovies(string movie1, string movie2)
+        {
+            var byUser = _allRatings.ToLookup(r => r.User);
+            var samples = new List<Tuple<double, double>>();
+            foreach (var u in byUser)
+            {
+                var m1 = u.FirstOrDefault(m => m.Movie == movie1);
+                if (m1 == null) continue;
+
+                var m2 = u.FirstOrDefault(m => m.Movie == movie2);
+                if (m2 == null) continue;
+
+                samples.Add(Tuple.Create((double)m1.Rating, (double)m2.Rating));
+            }
+            return samples;
+        }
+
+
 
     }
 }
