@@ -11,7 +11,14 @@ namespace KarinsFilmerTests
         public void Dev_test()
         {
             CouchConfig.SetupCouchDb();
-            CreateCalculator().CalculateData();
+            var covarianceCalculator = CreateCalculator();
+
+            covarianceCalculator.CalculateData();
+
+            covarianceCalculator.PrintSuggestionsFor("Karin");
+            covarianceCalculator.PrintSuggestionsFor("Mimmi");
+            covarianceCalculator.PrintSuggestionsFor("Staffan");
+            covarianceCalculator.PrintSuggestionsFor("Henrik");
         }
 
         private static CovarianceCalculator CreateCalculator()
