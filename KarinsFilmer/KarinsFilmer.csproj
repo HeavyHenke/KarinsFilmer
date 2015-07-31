@@ -34,6 +34,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DeployEncryptKey>Encryption password is used only if any deployment setting is marked as secure</DeployEncryptKey>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -228,6 +229,12 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MeController.cs" />
+    <Compile Include="CouchDb\Entities\AllRatingsRow.cs" />
+    <Compile Include="CouchDb\CovarianceCalculator.cs" />
+    <Compile Include="CouchDb\CouchRepository.cs" />
+    <Compile Include="CouchDb\Entities\CouchObject.cs" />
+    <Compile Include="CouchDb\Entities\MovieInformationRow.cs" />
+    <Compile Include="CouchDb\Entities\MovieRating.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -278,6 +285,7 @@
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <Content Include="Scripts\angular.min.js.map" />
     <EmbeddedResource Include="CouchDb\views.json" />
+    <None Include="Properties\PublishProfiles\Custom.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\controllers\rate-controller.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

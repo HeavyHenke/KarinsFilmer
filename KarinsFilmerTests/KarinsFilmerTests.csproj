@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{50F7EDA7-22C1-458A-AC90-13293CDE573E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>KarinsFilmerTests</RootNamespace>
+    <AssemblyName>KarinsFilmerTests</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EnsureThat, Version=2.0.0.39118, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ensure.That.2.0.0\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\EnsureThat.dll\EnsureThat.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MyCouch.Net45, Version=3.1.1.39083, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MyCouch.3.2.0\lib\net45\MyCouch.Net45.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+  <ItemGroup>
+    <Compile Include="CovarianceCalculatorTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KarinsFilmer\KarinsFilmer.csproj">
+      <Project>{f0922143-ca65-452f-bddb-1f6d2693e29e}</Project>
+      <Name>KarinsFilmer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554000cdb.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c45540014a2.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554001e0d.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c45540025dd.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554002ac8.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554002b20.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c45540034c8.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400363e.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554004581.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554004a3c.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554004a42.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554004f79.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c45540059ba.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554005b16.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554006372.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554006626.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c45540069dd.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c45540072b6.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554007cda.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554007ea6.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554008d53.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554008f7f.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400995f.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400a47b.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400a75a.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400afff.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400bfda.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400cab3.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400cc8f.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400daf1.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400e439.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400e697.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400f506.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400fc98.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554010817.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554012446.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554012e53.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554013096.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c45540138fa.json" />
+    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c45540148ce.json" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
