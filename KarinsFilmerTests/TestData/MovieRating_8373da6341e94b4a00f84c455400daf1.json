@@ -1,1 +1,1 @@
-{"_id":"8373da6341e94b4a00f84c455400daf1","_rev":"1-4db1ed08945dbc05b747bf4087103d1f","user":"Henrik","movie":"Donnie Darko","rating":4,"type":"MovieRating"}
+{"_id":"8373da6341e94b4a00f84c455400daf1","_rev":"1-4db1ed08945dbc05b747bf4087103d1f","user":"Henrik","movie":"Donnie Darko","movieYear": 2001,"imdbId":"tt0246578","rating":4,"type":"MovieRating"}

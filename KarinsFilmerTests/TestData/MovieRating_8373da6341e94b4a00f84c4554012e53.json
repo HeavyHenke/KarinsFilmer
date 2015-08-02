@@ -1,1 +1,1 @@
-{"_id":"8373da6341e94b4a00f84c4554012e53","_rev":"2-354f29ec948696b85ac97920681947f4","$doctype":"entry","user":"staffan.ekvall@gmail.com","movie":"Under Siege","rating":3,"type":"MovieRating"}
+{"_id":"8373da6341e94b4a00f84c4554012e53","_rev":"2-354f29ec948696b85ac97920681947f4","user":"staffan.ekvall@gmail.com","movie":"Under Siege","movieYear": 1992,"imdbId":"tt0105690","rating":3,"type":"MovieRating"}

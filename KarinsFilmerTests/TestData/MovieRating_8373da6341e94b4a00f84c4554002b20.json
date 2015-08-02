@@ -1,1 +1,1 @@
-{"_id":"8373da6341e94b4a00f84c4554002b20","_rev":"4-97ac5a8fea2889720d3a328d63a5c46e","$doctype":"entry","user":"staffan.ekvall@gmail.com","movie":"The Lord of the Rings: The Fellowship of the Ring","rating":3,"type":"MovieRating"}
+{"_id":"8373da6341e94b4a00f84c4554002b20","_rev":"4-97ac5a8fea2889720d3a328d63a5c46e","user":"staffan.ekvall@gmail.com","movie":"The Lord of the Rings: The Fellowship of the Ring","movieYear": 2001,"imdbId":"tt0120737","rating":3,"type":"MovieRating"}

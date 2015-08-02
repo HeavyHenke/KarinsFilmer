@@ -1,1 +1,1 @@
-{"_id":"8373da6341e94b4a00f84c4554004581","_rev":"1-d3a7534f5a20bcc04dd76a37f102fe9e","user":"Karin","movie":"Gravity","rating":2,"type":"MovieRating"}
+{"_id":"8373da6341e94b4a00f84c4554004581","_rev":"1-d3a7534f5a20bcc04dd76a37f102fe9e","user":"Karin","movie":"Gravity","movieYear": 2013,"imdbId":"tt1454468","rating":2,"type":"MovieRating"}

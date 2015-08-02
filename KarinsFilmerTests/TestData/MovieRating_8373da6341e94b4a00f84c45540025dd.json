@@ -1,1 +1,1 @@
-{"_id":"8373da6341e94b4a00f84c45540025dd","_rev":"4-2681f60dd7d1fea8bb200b903af657b7","$doctype":"entry","user":"staffan.ekvall@gmail.com","movie":"Terminator 2","rating":5,"type":"MovieRating"}
+{"_id":"8373da6341e94b4a00f84c45540025dd","_rev":"4-2681f60dd7d1fea8bb200b903af657b7","user":"staffan.ekvall@gmail.com","movie":"Terminator 2: Judgment Day","movieYear": 1991,"imdbId":"tt0103064","rating":5,"type":"MovieRating"}

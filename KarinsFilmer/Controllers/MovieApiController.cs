@@ -10,7 +10,6 @@ namespace KarinsFilmer.Controllers
         {
             return new List<MovieTip> {
                 new MovieTip { Title = "Django Unchained", Year = "2012", ImdbId = "tt1853728", Type = "movie" },
-                new MovieTip {Title = "Django Unchained 2", Year = "2012", ImdbId = "tt1853728", Type = "movie" },
                 new MovieTip {Title = "Hercules Unchained", Year = "1959", ImdbId = "tt0052782", Type = "movie" },
                 new MovieTip {Title = "America Unchained", Year = "2007", ImdbId = "tt1153075", Type = "movie" },
                 new MovieTip {Title = "Angel Unchained", Year = "1970", ImdbId = "tt0065401", Type = "movie" },

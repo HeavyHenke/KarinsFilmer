@@ -1,1 +1,1 @@
-{"_id":"8373da6341e94b4a00f84c45540072b6","_rev":"1-e1e7aa62bdbdd17d000f3eb3f1fff509","user":"Mimmi","movie":"Saving Private Ryan","rating":1,"type":"MovieRating"}
+{"_id":"8373da6341e94b4a00f84c45540072b6","_rev":"1-e1e7aa62bdbdd17d000f3eb3f1fff509","user":"Mimmi","movie":"Saving Private Ryan","movieYear": 1998,"imdbId":"tt0120815","rating":1,"type":"MovieRating"}

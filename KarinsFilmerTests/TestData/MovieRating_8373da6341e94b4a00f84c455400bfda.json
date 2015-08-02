@@ -1,1 +1,1 @@
-{"_id":"8373da6341e94b4a00f84c455400bfda","_rev":"1-9d55e17711d4c511467dd26eeda253b5","user":"Karin","movie":"Pulp Fiction","rating":5,"type":"MovieRating"}
+{"_id":"8373da6341e94b4a00f84c455400bfda","_rev":"1-9d55e17711d4c511467dd26eeda253b5","user":"Karin","movie":"Pulp Fiction","movieYear": 1994,"imdbId":"tt0110912","rating":5,"type":"MovieRating"}

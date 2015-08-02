@@ -1,1 +1,1 @@
-{"_id":"8373da6341e94b4a00f84c45540148ce","_rev":"2-325c02dd10866e9999ac5a46b077b6eb","$doctype":"entry","user":"staffan.ekvall@gmail.com","movie":"Titanic","rating":5,"type":"MovieRating"}
+{"_id":"8373da6341e94b4a00f84c45540148ce","_rev":"2-325c02dd10866e9999ac5a46b077b6eb","user":"staffan.ekvall@gmail.com","movie":"Titanic","movieYear": 1997,"imdbId":"tt0120338","rating":5,"type":"MovieRating"}

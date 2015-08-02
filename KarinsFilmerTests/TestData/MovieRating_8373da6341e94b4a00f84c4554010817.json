@@ -1,1 +1,1 @@
-{"_id":"8373da6341e94b4a00f84c4554010817","_rev":"1-e423418d75f64d415ea19ccbca55323c","user":"Henrik","movie":"Con Air","rating":4,"type":"MovieRating"}
+{"_id":"8373da6341e94b4a00f84c4554010817","_rev":"1-e423418d75f64d415ea19ccbca55323c","user":"Henrik","movie":"Con Air","movieYear": 1997,"imdbId":"tt0118880","rating":4,"type":"MovieRating"}

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using KarinsFilmer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MyCouch;
 using Newtonsoft.Json;
@@ -45,6 +46,8 @@ namespace KarinsFilmerTests
         [Ignore]
         public void ImportTestData()
         {
+            CouchConfig.SetupCouchDb();
+
             var testDataResources = Assembly.GetExecutingAssembly().GetManifestResourceNames().Where(n => n.StartsWith("KarinsFilmerTests.TestData")).ToList();
 
             string connectionString = ConfigurationManager.ConnectionStrings["CouchDb"].ConnectionString;
