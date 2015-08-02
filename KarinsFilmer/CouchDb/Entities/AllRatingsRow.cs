@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace KarinsFilmer.CouchDb
 {
     /// <summary>
@@ -8,7 +10,8 @@ namespace KarinsFilmer.CouchDb
         public string Id { get; set; }
         public string Rev { get; set; }
         public string User { get; set; }
-        public string Movie { get; set; }
+        [JsonProperty("imdbId")]
+        public string ImdbId { get; set; }
         public int Rating { get; set; }
         public string Type { get; set; }
     }

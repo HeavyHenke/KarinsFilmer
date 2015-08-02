@@ -19,25 +19,26 @@ namespace KarinsFilmer.CouchDb
             _couchRepository = couchRepository;
         }
 
-        public IList<string> GetSuggestionsForUser(string userName)
+        public IList<MovieInformationRow> GetSuggestionsForUser(string userName)
         {
             CalculateData();
 
-            var suggestions = new List<string>();
+            var suggestions = new List<MovieInformationRow>();
             suggestions.AddRange(SuggestionsForUser(userName));
             if (suggestions.Count < 10)
             {
-                var moviesSeenByUser = _allRatings.Where(r => r.User == userName).Select(r => r.Movie).Distinct();
+                var moviesSeenByUser = _allRatings.Where(r => r.User == userName).Select(r => r.ImdbId).Distinct();
                 var excludeMovies = new HashSet<string>(moviesSeenByUser);
                 foreach (var s in suggestions)
-                    excludeMovies.Add(s);
+                    excludeMovies.Add(s.ImdbId);
 
-                var additionalSuggestions = _movieInformation.Where(mi => excludeMovies.Contains(mi.Key) == false)
-                    .OrderByDescending(m => m.Value.Count)
-                    .ThenByDescending(m2 => m2.Value.Mean)
+                var additionalSuggestions = _movieInformation.Values
+                    .Where(mi => excludeMovies.Contains(mi.ImdbId) == false)
+                    .OrderByDescending(m => m.Count)
+                    .ThenByDescending(m2 => m2.Mean)
                     .Take(10 - suggestions.Count);
                 
-                suggestions.AddRange(additionalSuggestions.Select(m3 => m3.Key));
+                suggestions.AddRange(additionalSuggestions);
             }
 
             return suggestions;
@@ -76,16 +77,16 @@ namespace KarinsFilmer.CouchDb
 
         private void ReadInformationFromDatabase()
         {
-            _movieInformation = _couchRepository.GetAllMovieInformation().ToDictionary(key => key.MovieTitle);
+            _movieInformation = _couchRepository.GetAllMovieInformation().ToDictionary(key => key.ImdbId);
             _allRatings = _couchRepository.GetAllMovieRatings2().ToList();
         }
 
-        private IEnumerable<string> SuggestionsForUser(string user)
+        private IEnumerable<MovieInformationRow> SuggestionsForUser(string user)
         {
             var suggestionsWithWeight = new List<Tuple<string, double>>();
 
             var scoreByUser = _allRatings.Where(r => r.User == user).ToList();
-            var moviesSeenByUser = scoreByUser.Select(r => r.Movie).ToList();
+            var moviesSeenByUser = scoreByUser.Select(r => r.ImdbId).ToList();
             var moviesNotSeenByUser = _movieInformation.Keys.Except(moviesSeenByUser).ToList();
 
             foreach (var movie in moviesNotSeenByUser)
@@ -95,7 +96,7 @@ namespace KarinsFilmer.CouchDb
                 foreach (var s in scoreByUser)
                 {
                     double v;
-                    if (_variance.TryGetValue(Tuple.Create(movie, s.Movie), out v))
+                    if (_variance.TryGetValue(Tuple.Create(movie, s.ImdbId), out v))
                     {
                         var est = v * s.Rating;
                         est = (est + 5) / 2;
@@ -110,7 +111,9 @@ namespace KarinsFilmer.CouchDb
                 }
             }
 
-            return suggestionsWithWeight.Where(c => c.Item2 >= 3).OrderBy(a => a.Item2).Select(b => b.Item1);
+            return suggestionsWithWeight.Where(c => c.Item2 >= 3)
+                   .OrderBy(a => a.Item2)
+                   .Select(imdbId => _movieInformation[imdbId.Item1]);
         }
 
         private double CalculateCovariance(string movie1, string movie2)
@@ -135,10 +138,10 @@ namespace KarinsFilmer.CouchDb
             var samples = new List<Tuple<double, double>>();
             foreach (var u in byUser)
             {
-                var m1 = u.FirstOrDefault(m => m.Movie == movie1);
+                var m1 = u.FirstOrDefault(m => m.ImdbId == movie1);
                 if (m1 == null) continue;
 
-                var m2 = u.FirstOrDefault(m => m.Movie == movie2);
+                var m2 = u.FirstOrDefault(m => m.ImdbId == movie2);
                 if (m2 == null) continue;
 
                 samples.Add(Tuple.Create((double)m1.Rating, (double)m2.Rating));

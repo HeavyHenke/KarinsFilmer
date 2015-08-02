@@ -58,7 +58,7 @@ namespace KarinsFilmerTests
             Console.WriteLine("Suggestions for " + user);
             foreach (var movie in _covarianceCalculator.GetSuggestionsForUser(user))
             {
-                Console.WriteLine(movie);
+                Console.WriteLine(movie.MovieTitle);
             }
         }
     }
