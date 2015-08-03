@@ -45,9 +45,20 @@ namespace KarinsFilmerTests
         [Ignore]
         public void ImportTestData()
         {
+            // Remove the old database
+            string connectionString = ConfigurationManager.ConnectionStrings["CouchDb"].ConnectionString;
+            var uri = new Uri(connectionString);
+            var dbName = uri.LocalPath.Substring(1);
+
+            using (var s = new MyCouchServerClient(uri.Scheme + "://" + uri.Authority))
+            {
+                s.Databases.DeleteAsync(dbName).Wait();
+            }
+
+            // Create new database
             CouchConfig.SetupCouchDb();
 
-            string connectionString = ConfigurationManager.ConnectionStrings["CouchDb"].ConnectionString;
+            // Fill it with test data
             using (var c = new MyCouchStore(connectionString))
             {
                 foreach (var testData in GetTestData())

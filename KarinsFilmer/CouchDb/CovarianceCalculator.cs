@@ -19,11 +19,11 @@ namespace KarinsFilmer.CouchDb
             _couchRepository = couchRepository;
         }
 
-        public IList<MovieInformationRow> GetSuggestionsForUser(string userName)
+        public IList<MovieSuggestion> GetSuggestionsForUser(string userName)
         {
             CalculateData();
 
-            var suggestions = new List<MovieInformationRow>();
+            var suggestions = new List<MovieSuggestion>();
             suggestions.AddRange(SuggestionsForUser(userName));
             if (suggestions.Count < 10)
             {
@@ -36,7 +36,8 @@ namespace KarinsFilmer.CouchDb
                     .Where(mi => excludeMovies.Contains(mi.ImdbId) == false)
                     .OrderByDescending(m => m.Count)
                     .ThenByDescending(m2 => m2.Mean)
-                    .Take(10 - suggestions.Count);
+                    .Take(10 - suggestions.Count)
+                    .Select(m => new MovieSuggestion(m, -m.Count));
                 
                 suggestions.AddRange(additionalSuggestions);
             }
@@ -81,7 +82,7 @@ namespace KarinsFilmer.CouchDb
             _allRatings = _couchRepository.GetAllMovieRatings2().ToList();
         }
 
-        private IEnumerable<MovieInformationRow> SuggestionsForUser(string user)
+        private IEnumerable<MovieSuggestion> SuggestionsForUser(string user)
         {
             var suggestionsWithWeight = new List<Tuple<string, double>>();
 
@@ -111,9 +112,9 @@ namespace KarinsFilmer.CouchDb
                 }
             }
 
-            return suggestionsWithWeight.Where(c => c.Item2 >= 3)
-                   .OrderBy(a => a.Item2)
-                   .Select(imdbId => _movieInformation[imdbId.Item1]);
+            return suggestionsWithWeight //.Where(c => c.Item2 >= 3)
+                   .OrderByDescending(a => a.Item2)
+                   .Select(imdbId => new MovieSuggestion(_movieInformation[imdbId.Item1], imdbId.Item2));
         }
 
         private double CalculateCovariance(string movie1, string movie2)

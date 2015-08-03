@@ -235,6 +235,7 @@
     <Compile Include="CouchDb\Entities\CouchObject.cs" />
     <Compile Include="CouchDb\Entities\MovieInformationRow.cs" />
     <Compile Include="CouchDb\Entities\MovieRating.cs" />
+    <Compile Include="CouchDb\Entities\MovieSuggestion.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

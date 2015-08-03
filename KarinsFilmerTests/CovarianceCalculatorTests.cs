@@ -21,15 +21,16 @@ namespace KarinsFilmerTests
         [TestMethod]
         public void Dev_test()
         {
-            using(new DurationsPrinter())
+            using (new DurationsPrinter())
                 _covarianceCalculator.CalculateData();
 
             using (new DurationsPrinter())
-                PrintSuggestionsFor("Karin");
+                PrintSuggestionsFor("Annelie");
 
+            PrintSuggestionsFor("Karin");
             PrintSuggestionsFor("Mimmi");
             PrintSuggestionsFor("staffan.ekvall@gmail.com");
-            PrintSuggestionsFor("Staffan");
+            PrintSuggestionsFor("Janne");
             PrintSuggestionsFor("Henrik");
         }
 
@@ -58,7 +59,7 @@ namespace KarinsFilmerTests
             Console.WriteLine("Suggestions for " + user);
             foreach (var movie in _covarianceCalculator.GetSuggestionsForUser(user))
             {
-                Console.WriteLine(movie.MovieTitle);
+                Console.WriteLine(movie.MovieTitle + "   " + movie.SuggestionWieght);
             }
         }
     }
