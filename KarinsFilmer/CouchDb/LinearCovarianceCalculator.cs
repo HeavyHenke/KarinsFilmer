@@ -5,7 +5,7 @@ using KarinsFilmer.CouchDb.Entities;
 
 namespace KarinsFilmer.CouchDb
 {
-    class CovarianceCalculator
+    class LinearCovarianceCalculator
     {
         private readonly CouchRepository _couchRepository;
         private Dictionary<string, MovieInformationRow> _movieInformation;
@@ -14,35 +14,9 @@ namespace KarinsFilmer.CouchDb
 
         private bool HasCalculatedData { get; set; }
 
-        public CovarianceCalculator(CouchRepository couchRepository)
+        public LinearCovarianceCalculator(CouchRepository couchRepository)
         {
             _couchRepository = couchRepository;
-        }
-
-        public IList<MovieSuggestion> GetSuggestionsForUser(string userName)
-        {
-            CalculateData();
-
-            var suggestions = new List<MovieSuggestion>();
-            suggestions.AddRange(SuggestionsForUser(userName));
-            if (suggestions.Count < 10)
-            {
-                var moviesSeenByUser = _allRatings.Where(r => r.User == userName).Select(r => r.ImdbId).Distinct();
-                var excludeMovies = new HashSet<string>(moviesSeenByUser);
-                foreach (var s in suggestions)
-                    excludeMovies.Add(s.ImdbId);
-
-                var additionalSuggestions = _movieInformation.Values
-                    .Where(mi => excludeMovies.Contains(mi.ImdbId) == false)
-                    .OrderByDescending(m => m.Count)
-                    .ThenByDescending(m2 => m2.Mean)
-                    .Take(10 - suggestions.Count)
-                    .Select(m => new MovieSuggestion(m, -m.Count));
-                
-                suggestions.AddRange(additionalSuggestions);
-            }
-
-            return suggestions;
         }
 
         public void CalculateData()
@@ -54,7 +28,6 @@ namespace KarinsFilmer.CouchDb
             ReadInformationFromDatabase();
 
             List<string> movies = _movieInformation.Keys.ToList();
-            int num = 0;
 
             _variance = new Dictionary<Tuple<string, string>, double>();
 
@@ -82,8 +55,10 @@ namespace KarinsFilmer.CouchDb
             _allRatings = _couchRepository.GetAllMovieRatings2().ToList();
         }
 
-        private IEnumerable<MovieSuggestion> SuggestionsForUser(string user)
+        public IEnumerable<MovieSuggestion> SuggestionsForUser(string user)
         {
+            CalculateData();
+
             var suggestionsWithWeight = new List<Tuple<string, double>>();
 
             var scoreByUser = _allRatings.Where(r => r.User == user).ToList();

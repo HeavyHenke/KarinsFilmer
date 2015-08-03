@@ -12,7 +12,7 @@ namespace KarinsFilmer.Controllers
         public List<MovieTip> GetMovieTips()
         {
             string user = HttpContext.Current.User.Identity.Name;
-            var suggestions = new CovarianceCalculator(new CouchRepository()).GetSuggestionsForUser(user);
+            var suggestions = CreateSuggestionEngine().GetSuggestionsForUser(user);
 
             return
                 suggestions.Select(
@@ -37,6 +37,16 @@ namespace KarinsFilmer.Controllers
         {
 
         }
+
+
+
+        private static SuggestionEngine CreateSuggestionEngine()
+        {
+            var repo = new CouchRepository();
+            var linear = new LinearCovarianceCalculator(repo);
+            return new SuggestionEngine(linear, repo);
+        }
+
     }
 
 

@@ -8,13 +8,13 @@ namespace KarinsFilmerTests
     [TestClass]
     public class CovarianceCalculatorTests
     {
-        private CovarianceCalculator _covarianceCalculator;
+        private SuggestionEngine _suggestionEngine;
 
         [TestInitialize]
         public void Setup()
         {
             CouchConfig.SetupCouchDb();
-            _covarianceCalculator = CreateCalculator();
+            _suggestionEngine = CreateSuggestionEngine();
         }
 
 
@@ -22,11 +22,12 @@ namespace KarinsFilmerTests
         public void Dev_test()
         {
             using (new DurationsPrinter())
-                _covarianceCalculator.CalculateData();
+                _suggestionEngine.CalculateData();
 
             using (new DurationsPrinter())
-                PrintSuggestionsFor("Annelie");
+                PrintSuggestionsFor("Lilian");
 
+            PrintSuggestionsFor("Annelie");
             PrintSuggestionsFor("Karin");
             PrintSuggestionsFor("Mimmi");
             PrintSuggestionsFor("staffan.ekvall@gmail.com");
@@ -34,9 +35,11 @@ namespace KarinsFilmerTests
             PrintSuggestionsFor("Henrik");
         }
 
-        private static CovarianceCalculator CreateCalculator()
+        private static SuggestionEngine CreateSuggestionEngine()
         {
-            return new CovarianceCalculator(new CouchRepository());
+            var repo = new CouchRepository();
+            var linear = new LinearCovarianceCalculator(repo);
+            return new SuggestionEngine(linear, repo);
         }
 
 
@@ -57,7 +60,7 @@ namespace KarinsFilmerTests
         {
             Console.WriteLine();
             Console.WriteLine("Suggestions for " + user);
-            foreach (var movie in _covarianceCalculator.GetSuggestionsForUser(user))
+            foreach (var movie in _suggestionEngine.GetSuggestionsForUser(user))
             {
                 Console.WriteLine(movie.MovieTitle + "   " + movie.SuggestionWieght);
             }
