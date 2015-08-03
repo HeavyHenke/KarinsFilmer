@@ -67,6 +67,5 @@ namespace KarinsFilmerTests
             var jsonArray = JsonConvert.DeserializeObject<JObject[]>(jsonArrayString);
             return jsonArray.Select(j => j.ToString());
         }
-
     }
 }
