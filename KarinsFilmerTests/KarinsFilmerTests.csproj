@@ -77,46 +77,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554000cdb.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c45540014a2.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554001e0d.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c45540025dd.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554002ac8.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554002b20.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c45540034c8.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400363e.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554004581.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554004a3c.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554004a42.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554004f79.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c45540059ba.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554005b16.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554006372.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554006626.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c45540069dd.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c45540072b6.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554007cda.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554007ea6.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554008d53.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554008f7f.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400995f.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400a47b.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400a75a.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400afff.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400bfda.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400cab3.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400cc8f.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400daf1.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400e439.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400e697.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400f506.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c455400fc98.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554010817.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554012446.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554012e53.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c4554013096.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c45540138fa.json" />
-    <EmbeddedResource Include="TestData\MovieRating_8373da6341e94b4a00f84c45540148ce.json" />
+    <EmbeddedResource Include="TestData\Testdata.json" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
