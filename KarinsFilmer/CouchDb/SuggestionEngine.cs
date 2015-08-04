@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using KarinsFilmer.CouchDb.Entities;
 
 namespace KarinsFilmer.CouchDb
@@ -10,8 +11,7 @@ namespace KarinsFilmer.CouchDb
         private readonly TwoToOneCovarianceCalculator _twoToOneCovarianceCalculator;
         private readonly CouchRepository _couchRepository;
 
-        private List<AllRatingsRow> _allRatings;
-        private Dictionary<string, MovieInformationRow> _movieInformation;
+        private CommonSuggestionEngineData _commonData;
 
         private bool HasCalculatedData { get; set; }
 
@@ -40,12 +40,12 @@ namespace KarinsFilmer.CouchDb
             // Fill up with movies that needs rating.
             if (suggestions.Count < 10)
             {
-                var moviesSeenByUser = _allRatings.Where(r => r.User == userName).Select(r => r.ImdbId).Distinct();
+                var moviesSeenByUser = _commonData.AllRatings.Where(r => r.User == userName).Select(r => r.ImdbId).Distinct();
                 var excludeMovies = new HashSet<string>(moviesSeenByUser);
                 foreach (var s in suggestions)
                     excludeMovies.Add(s.ImdbId);
 
-                var additionalSuggestions = _movieInformation.Values
+                var additionalSuggestions = _commonData.MovieInformation.Values
                     .Where(mi => excludeMovies.Contains(mi.ImdbId) == false)
                     .OrderByDescending(m => m.Count)
                     .ThenByDescending(m2 => m2.Mean)
@@ -65,11 +65,27 @@ namespace KarinsFilmer.CouchDb
                 return;
             HasCalculatedData = true;
 
-            _linearCovarianceCalculator.CalculateData();
-            _twoToOneCovarianceCalculator.CalculateData();
+            Task<IEnumerable<MovieInformationRow>> movieInformation = _couchRepository.GetAllMovieInformation();
+            Task<IEnumerable<AllRatingsRow>> allRatings = _couchRepository.GetAllMovieRatings2();
+            Task.WaitAll(movieInformation, allRatings);
+            
+            _commonData = new CommonSuggestionEngineData(allRatings.Result, movieInformation.Result);
 
-            _movieInformation = _couchRepository.GetAllMovieInformation().ToDictionary(key => key.ImdbId);
-            _allRatings = _couchRepository.GetAllMovieRatings2().ToList();
+            _linearCovarianceCalculator.CalculateData(_commonData);
+            _twoToOneCovarianceCalculator.CalculateData(_commonData);
         }
     }
+
+    class CommonSuggestionEngineData
+    {
+        public List<AllRatingsRow> AllRatings { get; }
+        public Dictionary<string, MovieInformationRow> MovieInformation { get; }
+
+        public CommonSuggestionEngineData(IEnumerable<AllRatingsRow> allRatings, IEnumerable<MovieInformationRow> movieInformation)
+        {
+            MovieInformation = movieInformation.ToDictionary(key => key.ImdbId);
+            AllRatings = allRatings.ToList();
+        }
+    }
+
 }

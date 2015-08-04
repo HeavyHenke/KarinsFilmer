@@ -8,8 +8,7 @@ namespace KarinsFilmer.CouchDb
     class TwoToOneCovarianceCalculator
     {
         private readonly CouchRepository _couchRepository;
-        private Dictionary<string, MovieInformationRow> _movieInformation;
-        private List<AllRatingsRow> _allRatings;
+        private CommonSuggestionEngineData _commonData;
         private ILookup<string, AllRatingsRow> _ratingsByUser;
         private ILookup<KeyNode, ValueNode> _variance;
 
@@ -20,13 +19,14 @@ namespace KarinsFilmer.CouchDb
             _couchRepository = couchRepository;
         }
 
-        public void CalculateData()
+        public void CalculateData(CommonSuggestionEngineData commonData)
         {
             if (HasCalculatedData)
                 return;
             HasCalculatedData = true;
 
-            ReadInformationFromDatabase();
+            _commonData = commonData;
+            _ratingsByUser = _commonData.AllRatings.ToLookup(key => key.User);
 
             var variance = new List<Tuple<KeyNode, ValueNode>>();
             foreach (var combo in GetAllTwoMovieCombinations())
@@ -111,7 +111,7 @@ namespace KarinsFilmer.CouchDb
 
         private IEnumerable<KeyNode> GetAllTwoMovieCombinations()
         {
-            var allMovies = _movieInformation.Keys.ToList();
+            var allMovies = _commonData.MovieInformation.Keys.ToList();
 
             for (int i = 0; i < allMovies.Count - 1; i++)
             {
@@ -126,19 +126,9 @@ namespace KarinsFilmer.CouchDb
         }
 
 
-        private void ReadInformationFromDatabase()
-        {
-            _movieInformation = _couchRepository.GetAllMovieInformation().ToDictionary(key => key.ImdbId);
-            _allRatings = _couchRepository.GetAllMovieRatings2().ToList();
-
-            _ratingsByUser = _allRatings.ToLookup(key => key.User);
-        }
-
         public IEnumerable<MovieSuggestion> SuggestionsForUser(string user)
         {
-            CalculateData();
-
-            var scoreByUser = _allRatings.Where(r => r.User == user).ToList();
+            var scoreByUser = _commonData.AllRatings.Where(r => r.User == user).ToList();
             var moviesSeenByUser = new HashSet<string>(scoreByUser.Select(r => r.ImdbId));
 
             var suggestions = new List<Tuple<string, double, double>>(); // movie, estimated score, weight
@@ -175,7 +165,7 @@ namespace KarinsFilmer.CouchDb
 
             return weightedAveragedSuggestions //.Where(c => c.Item2 >= 3)
                    .OrderByDescending(a => a.Item2)
-                   .Select(s => new MovieSuggestion(_movieInformation[s.Item1], s.Item2));
+                   .Select(s => new MovieSuggestion(_commonData.MovieInformation[s.Item1], s.Item2));
         }
 
         private IEnumerable<KeyNode> GetAllKeysByUser(string user)
