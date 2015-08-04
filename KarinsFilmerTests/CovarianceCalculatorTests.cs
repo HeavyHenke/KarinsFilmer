@@ -1,6 +1,7 @@
 ﻿using System;
 using KarinsFilmer;
 using KarinsFilmer.CouchDb;
+using KarinsFilmer.SuggestionEngine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace KarinsFilmerTests
@@ -27,19 +28,19 @@ namespace KarinsFilmerTests
             using (new DurationsPrinter())
                 PrintSuggestionsFor("Lilian");
 
+            PrintSuggestionsFor("Janne");
             PrintSuggestionsFor("Annelie");
             PrintSuggestionsFor("Karin");
             PrintSuggestionsFor("Mimmi");
             PrintSuggestionsFor("staffan.ekvall@gmail.com");
-            PrintSuggestionsFor("Janne");
             PrintSuggestionsFor("Henrik");
         }
 
         private static SuggestionEngine CreateSuggestionEngine()
         {
             var repo = new CouchRepository();
-            var linear = new LinearCovarianceCalculator(repo);
-            var twoToOne = new TwoToOneCovarianceCalculator(repo);
+            var linear = new LinearCovarianceCalculator();
+            var twoToOne = new TwoToOneCovarianceCalculator();
             return new SuggestionEngine(linear, twoToOne, repo);
         }
 

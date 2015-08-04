@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using KarinsFilmer.CouchDb;
+using KarinsFilmer.SuggestionEngine;
 
 namespace KarinsFilmer.Controllers
 {
@@ -40,12 +41,12 @@ namespace KarinsFilmer.Controllers
 
 
 
-        private static SuggestionEngine CreateSuggestionEngine()
+        private static SuggestionEngine.SuggestionEngine CreateSuggestionEngine()
         {
             var repo = new CouchRepository();
-            var linear = new LinearCovarianceCalculator(repo);
-            var twoToOne = new TwoToOneCovarianceCalculator(repo);
-            return new SuggestionEngine(linear, twoToOne, repo);
+            var linear = new LinearCovarianceCalculator();
+            var twoToOne = new TwoToOneCovarianceCalculator();
+            return new SuggestionEngine.SuggestionEngine(linear, twoToOne, repo);
         }
 
     }

@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KarinsFilmer.CouchDb;
 using KarinsFilmer.CouchDb.Entities;
 
-namespace KarinsFilmer.CouchDb
+namespace KarinsFilmer.SuggestionEngine
 {
     class SuggestionEngine
     {

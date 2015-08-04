@@ -230,14 +230,14 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MeController.cs" />
     <Compile Include="CouchDb\Entities\AllRatingsRow.cs" />
-    <Compile Include="CouchDb\LinearCovarianceCalculator.cs" />
+    <Compile Include="SuggestionEngine\LinearCovarianceCalculator.cs" />
     <Compile Include="CouchDb\CouchRepository.cs" />
     <Compile Include="CouchDb\Entities\CouchObject.cs" />
     <Compile Include="CouchDb\Entities\MovieInformationRow.cs" />
     <Compile Include="CouchDb\Entities\MovieRating.cs" />
     <Compile Include="CouchDb\Entities\MovieSuggestion.cs" />
-    <Compile Include="CouchDb\SuggestionEngine.cs" />
-    <Compile Include="CouchDb\TwoToOneCovarianceCalculator.cs" />
+    <Compile Include="SuggestionEngine\SuggestionEngine.cs" />
+    <Compile Include="SuggestionEngine\TwoToOneCovarianceCalculator.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

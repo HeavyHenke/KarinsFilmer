@@ -58,6 +58,7 @@
 {"user":"Annelie","movie":"Con Air","movieYear":1997,"imdbId":"tt0118880","rating":4,"type":"MovieRating"},
 {"user":"Annelie","movie":"The Lord of the Rings: The Fellowship of the Ring","movieYear":2001,"imdbId":"tt0120737","rating":4,"type":"MovieRating"},
 {"user":"Annelie","movie":"Ant-Man","movieYear":2015,"imdbId":"tt0478970","rating":1,"type":"MovieRating"},
+{"user":"Annelie","movie":"Elling","movieYear":2001,"imdbId":"tt0279064","rating":5,"type":"MovieRating"},
 {"user":"Lilian","movie":"Dumb & Dumber","movieYear":1994,"imdbId":"tt0109686","rating":5,"type":"MovieRating"},
 {"user":"Lilian","movie":"Elling","movieYear":2001,"imdbId":"tt0279064","rating":5,"type":"MovieRating"},
 {"user":"Lilian","movie":"There's Something About Mary","movieYear":1998,"imdbId":"tt0129387","rating":3,"type":"MovieRating"},

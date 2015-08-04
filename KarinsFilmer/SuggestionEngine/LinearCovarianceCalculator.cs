@@ -3,21 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using KarinsFilmer.CouchDb.Entities;
 
-namespace KarinsFilmer.CouchDb
+namespace KarinsFilmer.SuggestionEngine
 {
     class LinearCovarianceCalculator
     {
-        private readonly CouchRepository _couchRepository;
         private CommonSuggestionEngineData _commonData;
 
         private Dictionary<Tuple<string, string>, double> _variance;
 
         private bool HasCalculatedData { get; set; }
 
-        public LinearCovarianceCalculator(CouchRepository couchRepository)
-        {
-            _couchRepository = couchRepository;
-        }
 
         public void CalculateData(CommonSuggestionEngineData commonData)
         {

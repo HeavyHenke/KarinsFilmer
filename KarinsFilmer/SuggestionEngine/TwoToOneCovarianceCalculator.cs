@@ -1,23 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using KarinsFilmer.CouchDb;
 using KarinsFilmer.CouchDb.Entities;
 
-namespace KarinsFilmer.CouchDb
+namespace KarinsFilmer.SuggestionEngine
 {
     class TwoToOneCovarianceCalculator
     {
-        private readonly CouchRepository _couchRepository;
         private CommonSuggestionEngineData _commonData;
         private ILookup<string, AllRatingsRow> _ratingsByUser;
         private ILookup<KeyNode, ValueNode> _variance;
 
         private bool HasCalculatedData { get; set; }
 
-        public TwoToOneCovarianceCalculator(CouchRepository couchRepository)
-        {
-            _couchRepository = couchRepository;
-        }
 
         public void CalculateData(CommonSuggestionEngineData commonData)
         {
