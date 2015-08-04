@@ -7,6 +7,7 @@ namespace KarinsFilmer.CouchDb
     class SuggestionEngine
     {
         private readonly LinearCovarianceCalculator _linearCovarianceCalculator;
+        private readonly TwoToOneCovarianceCalculator _twoToOneCovarianceCalculator;
         private readonly CouchRepository _couchRepository;
 
         private List<AllRatingsRow> _allRatings;
@@ -15,10 +16,11 @@ namespace KarinsFilmer.CouchDb
         private bool HasCalculatedData { get; set; }
 
 
-        public SuggestionEngine(LinearCovarianceCalculator linearCovarianceCalculator, CouchRepository couchRepository)
+        public SuggestionEngine(LinearCovarianceCalculator linearCovarianceCalculator, TwoToOneCovarianceCalculator twoToOneCovarianceCalculator, CouchRepository couchRepository)
         {
             _couchRepository = couchRepository;
             _linearCovarianceCalculator = linearCovarianceCalculator;
+            _twoToOneCovarianceCalculator = twoToOneCovarianceCalculator;
         }
 
         public IList<MovieSuggestion> GetSuggestionsForUser(string userName)
@@ -26,8 +28,16 @@ namespace KarinsFilmer.CouchDb
             CalculateData();
 
             var suggestions = new List<MovieSuggestion>();
-            suggestions.AddRange(_linearCovarianceCalculator.SuggestionsForUser(userName));
+            suggestions.AddRange(_twoToOneCovarianceCalculator.SuggestionsForUser(userName));
 
+            // Add only suggestions from the one-level method that the two-level method did not find.
+            var allreadySuggested = new HashSet<string>(suggestions.Select(s => s.ImdbId));
+            suggestions.AddRange(_linearCovarianceCalculator.SuggestionsForUser(userName).Where(s => !allreadySuggested.Contains(s.ImdbId)));
+
+            // Re-order the list
+            suggestions = suggestions.OrderByDescending(s => s.SuggestionWieght).ToList();
+
+            // Fill up with movies that needs rating.
             if (suggestions.Count < 10)
             {
                 var moviesSeenByUser = _allRatings.Where(r => r.User == userName).Select(r => r.ImdbId).Distinct();
@@ -56,6 +66,7 @@ namespace KarinsFilmer.CouchDb
             HasCalculatedData = true;
 
             _linearCovarianceCalculator.CalculateData();
+            _twoToOneCovarianceCalculator.CalculateData();
 
             _movieInformation = _couchRepository.GetAllMovieInformation().ToDictionary(key => key.ImdbId);
             _allRatings = _couchRepository.GetAllMovieRatings2().ToList();

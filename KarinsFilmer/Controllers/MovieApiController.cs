@@ -44,7 +44,8 @@ namespace KarinsFilmer.Controllers
         {
             var repo = new CouchRepository();
             var linear = new LinearCovarianceCalculator(repo);
-            return new SuggestionEngine(linear, repo);
+            var twoToOne = new TwoToOneCovarianceCalculator(repo);
+            return new SuggestionEngine(linear, twoToOne, repo);
         }
 
     }

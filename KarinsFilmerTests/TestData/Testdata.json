@@ -7,6 +7,7 @@
 {"user":"Henrik","movie":"Under Siege","movieYear":1992,"imdbId":"tt0105690","rating":4,"type":"MovieRating"},
 {"user":"Henrik","movie":"Donnie Darko","movieYear":2001,"imdbId":"tt0246578","rating":4,"type":"MovieRating"},
 {"user":"Henrik","movie":"Con Air","movieYear":1997,"imdbId":"tt0118880","rating":4,"type":"MovieRating"},
+{"user":"Henrik","movie":"Kung Fury","movieYear":2015,"imdbId":"tt3472226","rating":4,"type":"MovieRating"},
 {"user":"staffan.ekvall@gmail.com","movie":"Terminator 2: Judgment Day","movieYear":1991,"imdbId":"tt0103064","rating":5,"type":"MovieRating"},
 {"user":"staffan.ekvall@gmail.com","movie":"Primer","movieYear":2004,"imdbId":"tt0390384","rating":5,"type":"MovieRating"},
 {"user":"staffan.ekvall@gmail.com","movie":"The Lord of the Rings: The Fellowship of the Ring","movieYear":2001,"imdbId":"tt0120737","rating":3,"type":"MovieRating"},

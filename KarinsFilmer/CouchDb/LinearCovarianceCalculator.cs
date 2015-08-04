@@ -31,7 +31,7 @@ namespace KarinsFilmer.CouchDb
 
             _variance = new Dictionary<Tuple<string, string>, double>();
 
-            for (int i = 0; i < movies.Count - 2; i++)
+            for (int i = 0; i < movies.Count - 1; i++)
             {
                 for (int j = i + 1; j < movies.Count; j++)
                 {
