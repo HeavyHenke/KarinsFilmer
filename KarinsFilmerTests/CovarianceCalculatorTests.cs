@@ -26,8 +26,9 @@ namespace KarinsFilmerTests
                 _suggestionEngine.CalculateData();
 
             using (new DurationsPrinter())
-                PrintSuggestionsFor("Lilian");
+                PrintSuggestionsFor("Bjorn");
 
+            PrintSuggestionsFor("Lilian");
             PrintSuggestionsFor("Janne");
             PrintSuggestionsFor("Annelie");
             PrintSuggestionsFor("Karin");

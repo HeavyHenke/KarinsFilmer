@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using KarinsFilmer.CouchDb.Entities;
 
 namespace KarinsFilmer.SuggestionEngine
@@ -14,14 +15,18 @@ namespace KarinsFilmer.SuggestionEngine
         private bool HasCalculatedData { get; set; }
 
 
-        public void CalculateData(CommonSuggestionEngineData commonData)
+        public async Task CalculateData(CommonSuggestionEngineData commonData)
         {
             if (HasCalculatedData)
                 return;
             HasCalculatedData = true;
 
             _commonData = commonData;
+            await Task.Run(() => DoCalculateData());
+        }
 
+        private void DoCalculateData()
+        {
             List<string> movies = _commonData.MovieInformation.Keys.ToList();
 
             _variance = new Dictionary<Tuple<string, string>, double>();
@@ -32,7 +37,7 @@ namespace KarinsFilmer.SuggestionEngine
                 {
                     var val = CalculateCovariance(movies[i], movies[j]);
                     if (val < 0)
-                        val = val / 2;
+                        val = val/2;
 
                     if (val != 0)
                     {
@@ -42,7 +47,7 @@ namespace KarinsFilmer.SuggestionEngine
                 }
             }
         }
-           
+
 
         public IEnumerable<MovieSuggestion> SuggestionsForUser(string user)
         {

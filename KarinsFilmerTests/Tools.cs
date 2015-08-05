@@ -42,7 +42,7 @@ namespace KarinsFilmerTests
         }
 
         [TestMethod]
-        [Ignore]
+        //[Ignore]
         public void ImportTestData()
         {
             // Remove the old database

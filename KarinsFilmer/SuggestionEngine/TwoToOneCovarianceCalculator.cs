@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using KarinsFilmer.CouchDb;
 using KarinsFilmer.CouchDb.Entities;
 
@@ -15,13 +16,18 @@ namespace KarinsFilmer.SuggestionEngine
         private bool HasCalculatedData { get; set; }
 
 
-        public void CalculateData(CommonSuggestionEngineData commonData)
+        public async Task CalculateData(CommonSuggestionEngineData commonData)
         {
             if (HasCalculatedData)
                 return;
             HasCalculatedData = true;
 
             _commonData = commonData;
+            await Task.Run(() => DoCalculateData());
+        }
+
+        private void DoCalculateData()
+        {
             _ratingsByUser = _commonData.AllRatings.ToLookup(key => key.User);
 
             var variance = new List<Tuple<KeyNode, ValueNode>>();
@@ -34,7 +40,7 @@ namespace KarinsFilmer.SuggestionEngine
                     double score1 = v.Average(x => x.Rating1);
                     double score2 = v.Average(x => x.Rating2);
                     double score3 = v.Average(x => x.Rating3);
-                    
+
                     var meanValueNode = new ValueNode(score1, score2, v.Key, score3);
                     variance.Add(Tuple.Create(combo, meanValueNode));
                 }
@@ -47,7 +53,7 @@ namespace KarinsFilmer.SuggestionEngine
         {
             foreach (var ratingsByUser in _ratingsByUser)
             {
-                var allMoviesByUser = ratingsByUser.Select(r => r.ImdbId).ToList();
+                var allMoviesByUser = ratingsByUser.Select(r => r.ImdbId);
                 if (!combo.ListContainsKey(allMoviesByUser))
                     continue; // User has not seen both movies.
 
@@ -82,9 +88,23 @@ namespace KarinsFilmer.SuggestionEngine
                 }
             }
 
-            public bool ListContainsKey(IList<string> list)
+            public bool ListContainsKey(IEnumerable<string> list)
             {
-                return list.Contains(Movie1) && list.Contains(Movie2);
+                bool found1 = false;
+                bool found2 = false;
+
+                foreach (string m in list)
+                {
+                    if (!found1 && m == Movie1)
+                        found1 = true;
+                    if (!found2 && m == Movie2)
+                        found2 = true;
+
+                    if (found1 && found2)
+                        return true;
+                }
+
+                return false;
             }
         }
 
@@ -172,10 +192,9 @@ namespace KarinsFilmer.SuggestionEngine
             {
                 for (int j = i + 1; j < userMovies.Count; j++)
                 {
-                    var movie1 = userMovies[i];
                     var movie2 = userMovies[j];
 
-                    yield return new KeyNode(movie1, movie2);
+                    yield return new KeyNode(userMovies[i], movie2);
                 }
             }
         }

@@ -72,8 +72,9 @@ namespace KarinsFilmer.SuggestionEngine
             
             _commonData = new CommonSuggestionEngineData(allRatings.Result, movieInformation.Result);
 
-            _linearCovarianceCalculator.CalculateData(_commonData);
-            _twoToOneCovarianceCalculator.CalculateData(_commonData);
+            var calc1 = _linearCovarianceCalculator.CalculateData(_commonData);
+            var calc2 = _twoToOneCovarianceCalculator.CalculateData(_commonData);
+            Task.WaitAll(calc1, calc2);
         }
     }
 
