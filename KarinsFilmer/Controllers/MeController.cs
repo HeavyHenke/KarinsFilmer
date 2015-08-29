@@ -14,7 +14,7 @@ using KarinsFilmer.Models;
 
 namespace KarinsFilmer.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class MeController : ApiController
     {
         private ApplicationUserManager _userManager;
@@ -43,8 +43,8 @@ namespace KarinsFilmer.Controllers
         // GET api/Me
         public GetViewModel Get()
         {
-            var user = UserManager.FindById(User.Identity.GetUserId());
-            return new GetViewModel() { Hometown = user.Hometown };
+            //var user = UserManager.FindById(User.Identity.GetUserId());
+            return new GetViewModel(); //{ Hometown = user.Hometown };
         }
     }
 }

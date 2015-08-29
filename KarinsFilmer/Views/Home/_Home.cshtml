@@ -16,8 +16,15 @@
                         <!-- List group -->
                         <ul class="list-group">
                             <li class="list-group-item" ng-repeat="(idx, movie) in movieTips" ng-disabled="working">
-                                {{movie.title}} ({{movie.year}}) <input id="input-id" type="number"
-                                                                        class="rating" min="1" max="5" step="1" data-size="sm" showClear="false" showCaption="false" glyphicon="false">
+                                {{movie.title}} ({{movie.year}})
+                                @*<ng-rate-it
+                                    ng-model="scope.rating"
+                                    min="0"
+                                    max="5"
+                                    step="1"
+                                    resetable="False"
+                                            >
+                                </ng-rate-it>*@
                             </li>
                         </ul>
                     </div>
@@ -27,4 +34,17 @@
     </section>
 
 
+</div>
+
+<div ng-app="app" ng-controller="RatingController as rating" class="container">
+    <h1>Angular Star Rating Directive</h1>
+    <div star-rating ng-model="rating.rating1" max="10" on-rating-select="rating.rateFunction(rating)"></div>
+    <star-rating ng-model="rating.rating2" readonly="rating.isReadonly"></star-rating>
+    <label>
+        <input type="checkbox" ng-model="rating.isReadonly" />
+        Is Readonly
+    </label>
+
+    <div><strong>Rating 1:</strong> {{rating.rating1}}</div>
+    <div><strong>Rating 2:</strong> {{rating.rating2}}</div>
 </div>

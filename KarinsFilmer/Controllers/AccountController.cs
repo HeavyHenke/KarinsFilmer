@@ -12,7 +12,7 @@ using KarinsFilmer.Models;
 
 namespace KarinsFilmer.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
