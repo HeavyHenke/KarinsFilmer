@@ -1,69 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using KarinsFilmer.CouchDb.Entities;
 
-namespace KarinsFilmer.CouchDb
+namespace KarinsFilmer.SuggestionEngine
 {
-    class CovarianceCalculator
+    class LinearCovarianceCalculator
     {
-        private readonly CouchRepository _couchRepository;
-        private Dictionary<string, MovieInformationRow> _movieInformation;
-        private List<AllRatingsRow> _allRatings;
+        private CommonSuggestionEngineData _commonData;
+
         private Dictionary<Tuple<string, string>, double> _variance;
 
         private bool HasCalculatedData { get; set; }
 
-        public CovarianceCalculator(CouchRepository couchRepository)
-        {
-            _couchRepository = couchRepository;
-        }
 
-        public IList<MovieInformationRow> GetSuggestionsForUser(string userName)
-        {
-            CalculateData();
-
-            var suggestions = new List<MovieInformationRow>();
-            suggestions.AddRange(SuggestionsForUser(userName));
-            if (suggestions.Count < 10)
-            {
-                var moviesSeenByUser = _allRatings.Where(r => r.User == userName).Select(r => r.ImdbId).Distinct();
-                var excludeMovies = new HashSet<string>(moviesSeenByUser);
-                foreach (var s in suggestions)
-                    excludeMovies.Add(s.ImdbId);
-
-                var additionalSuggestions = _movieInformation.Values
-                    .Where(mi => excludeMovies.Contains(mi.ImdbId) == false)
-                    .OrderByDescending(m => m.Count)
-                    .ThenByDescending(m2 => m2.Mean)
-                    .Take(10 - suggestions.Count);
-                
-                suggestions.AddRange(additionalSuggestions);
-            }
-
-            return suggestions;
-        }
-
-        public void CalculateData()
+        public async Task CalculateData(CommonSuggestionEngineData commonData)
         {
             if (HasCalculatedData)
                 return;
             HasCalculatedData = true;
 
-            ReadInformationFromDatabase();
+            _commonData = commonData;
+            await Task.Run(() => DoCalculateData());
+        }
 
-            List<string> movies = _movieInformation.Keys.ToList();
-            int num = 0;
+        private void DoCalculateData()
+        {
+            List<string> movies = _commonData.MovieInformation.Keys.ToList();
 
             _variance = new Dictionary<Tuple<string, string>, double>();
 
-            for (int i = 0; i < movies.Count - 2; i++)
+            for (int i = 0; i < movies.Count - 1; i++)
             {
                 for (int j = i + 1; j < movies.Count; j++)
                 {
                     var val = CalculateCovariance(movies[i], movies[j]);
                     if (val < 0)
-                        val = val / 2;
+                        val = val/2;
 
                     if (val != 0)
                     {
@@ -73,21 +47,15 @@ namespace KarinsFilmer.CouchDb
                 }
             }
         }
-           
 
-        private void ReadInformationFromDatabase()
-        {
-            _movieInformation = _couchRepository.GetAllMovieInformation().ToDictionary(key => key.ImdbId);
-            _allRatings = _couchRepository.GetAllMovieRatings2().ToList();
-        }
 
-        private IEnumerable<MovieInformationRow> SuggestionsForUser(string user)
+        public IEnumerable<MovieSuggestion> SuggestionsForUser(string user)
         {
             var suggestionsWithWeight = new List<Tuple<string, double>>();
 
-            var scoreByUser = _allRatings.Where(r => r.User == user).ToList();
+            var scoreByUser = _commonData.AllRatings.Where(r => r.User == user).ToList();
             var moviesSeenByUser = scoreByUser.Select(r => r.ImdbId).ToList();
-            var moviesNotSeenByUser = _movieInformation.Keys.Except(moviesSeenByUser).ToList();
+            var moviesNotSeenByUser = _commonData.MovieInformation.Keys.Except(moviesSeenByUser).ToList();
 
             foreach (var movie in moviesNotSeenByUser)
             {
@@ -111,9 +79,9 @@ namespace KarinsFilmer.CouchDb
                 }
             }
 
-            return suggestionsWithWeight.Where(c => c.Item2 >= 3)
-                   .OrderBy(a => a.Item2)
-                   .Select(imdbId => _movieInformation[imdbId.Item1]);
+            return suggestionsWithWeight //.Where(c => c.Item2 >= 3)
+                   .OrderByDescending(a => a.Item2)
+                   .Select(imdbId => new MovieSuggestion(_commonData.MovieInformation[imdbId.Item1], imdbId.Item2));
         }
 
         private double CalculateCovariance(string movie1, string movie2)
@@ -134,7 +102,7 @@ namespace KarinsFilmer.CouchDb
 
         private List<Tuple<double, double>> GetSampelsWithBothMovies(string movie1, string movie2)
         {
-            var byUser = _allRatings.ToLookup(r => r.User);
+            var byUser = _commonData.AllRatings.ToLookup(r => r.User);
             var samples = new List<Tuple<double, double>>();
             foreach (var u in byUser)
             {

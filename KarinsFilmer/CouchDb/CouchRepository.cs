@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace KarinsFilmer.CouchDb
 {
@@ -52,13 +53,13 @@ namespace KarinsFilmer.CouchDb
 
 
 
-        public IEnumerable<MovieInformationRow> GetAllMovieInformation()
+        public async Task<IEnumerable<MovieInformationRow>> GetAllMovieInformation()
         {
             using (var c = new MyCouchStore(_uri))
             {
                 var query = new Query("views", "movies");
                 query.Group = true;
-                var result = c.QueryAsync<MovieInformationRow>(query).Result;
+                var result = await c.QueryAsync<MovieInformationRow>(query);
                 return result.Select(x => x.Value);
             }
         }
@@ -66,13 +67,13 @@ namespace KarinsFilmer.CouchDb
         /// <summary>
         /// Temp function, will be removed when datamodel is consistent
         /// </summary>
-        public IEnumerable<AllRatingsRow> GetAllMovieRatings2()
+        public async Task<IEnumerable<AllRatingsRow>> GetAllMovieRatings2()
         {
             using (var c = new MyCouchStore(_uri))
             {
                 var query = new Query("views", "allRatings");
                 query.Reduce = false;
-                var result = c.QueryAsync<AllRatingsRow>(query).Result;
+                var result = await c.QueryAsync<AllRatingsRow>(query);
                 return result.Select(x => x.Value);
             }
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using KarinsFilmer;
 using KarinsFilmer.CouchDb;
+using KarinsFilmer.SuggestionEngine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace KarinsFilmerTests
@@ -8,34 +9,40 @@ namespace KarinsFilmerTests
     [TestClass]
     public class CovarianceCalculatorTests
     {
-        private CovarianceCalculator _covarianceCalculator;
+        private SuggestionEngine _suggestionEngine;
 
         [TestInitialize]
         public void Setup()
         {
             CouchConfig.SetupCouchDb();
-            _covarianceCalculator = CreateCalculator();
+            _suggestionEngine = CreateSuggestionEngine();
         }
 
 
         [TestMethod]
         public void Dev_test()
         {
-            using(new DurationsPrinter())
-                _covarianceCalculator.CalculateData();
+            using (new DurationsPrinter())
+                _suggestionEngine.CalculateData();
 
             using (new DurationsPrinter())
-                PrintSuggestionsFor("Karin");
+                PrintSuggestionsFor("Bjorn");
 
+            PrintSuggestionsFor("Lilian");
+            PrintSuggestionsFor("Janne");
+            PrintSuggestionsFor("Annelie");
+            PrintSuggestionsFor("Karin");
             PrintSuggestionsFor("Mimmi");
             PrintSuggestionsFor("staffan.ekvall@gmail.com");
-            PrintSuggestionsFor("Staffan");
             PrintSuggestionsFor("Henrik");
         }
 
-        private static CovarianceCalculator CreateCalculator()
+        private static SuggestionEngine CreateSuggestionEngine()
         {
-            return new CovarianceCalculator(new CouchRepository());
+            var repo = new CouchRepository();
+            var linear = new LinearCovarianceCalculator();
+            var twoToOne = new TwoToOneCovarianceCalculator();
+            return new SuggestionEngine(linear, twoToOne, repo);
         }
 
 
@@ -56,9 +63,9 @@ namespace KarinsFilmerTests
         {
             Console.WriteLine();
             Console.WriteLine("Suggestions for " + user);
-            foreach (var movie in _covarianceCalculator.GetSuggestionsForUser(user))
+            foreach (var movie in _suggestionEngine.GetSuggestionsForUser(user))
             {
-                Console.WriteLine(movie.MovieTitle);
+                Console.WriteLine(movie.MovieTitle + "   " + movie.SuggestionWieght);
             }
         }
     }

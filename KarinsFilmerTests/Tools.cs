@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using KarinsFilmer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MyCouch;
@@ -25,52 +25,58 @@ namespace KarinsFilmerTests
                 var query = new Query("_all_docs") {IncludeDocs = true};
                 var result = c.QueryAsync(query).Result;
 
+                var jsonFileParts = new List<string>();
+
                 foreach (var obj in result)
                 {
-                    string filename = "";
-
                     var doc = JsonConvert.DeserializeObject<JObject>(obj.IncludedDoc);
 
                     JToken type;
-                    if (doc.TryGetValue("type", out type))
-                        filename = type.ToString();
-                    filename += "_" + obj.Key + ".json";
-                    filename = filename.Replace("/", "_");
-
-                    File.WriteAllText(filename, obj.IncludedDoc);
+                    if (doc.TryGetValue("type", out type) && type.ToString() == "MovieRating")
+                        jsonFileParts.Add(obj.IncludedDoc);
                 }
+
+                var json = "[\n" + String.Join(",\n", jsonFileParts) + "\n]";
+                File.WriteAllText("TestData.json", json);
             }
         }
 
         [TestMethod]
-        [Ignore]
+        //[Ignore]
         public void ImportTestData()
         {
+            // Remove the old database
+            string connectionString = ConfigurationManager.ConnectionStrings["CouchDb"].ConnectionString;
+            var uri = new Uri(connectionString);
+            var dbName = uri.LocalPath.Substring(1);
+
+            using (var s = new MyCouchServerClient(uri.Scheme + "://" + uri.Authority))
+            {
+                s.Databases.DeleteAsync(dbName).Wait();
+            }
+
+            // Create new database
             CouchConfig.SetupCouchDb();
 
-            var testDataResources = Assembly.GetExecutingAssembly().GetManifestResourceNames().Where(n => n.StartsWith("KarinsFilmerTests.TestData")).ToList();
-
-            string connectionString = ConfigurationManager.ConnectionStrings["CouchDb"].ConnectionString;
+            // Fill it with test data
             using (var c = new MyCouchStore(connectionString))
             {
-                foreach (var resourceName in testDataResources)
+                foreach (var testData in GetTestData())
                 {
-                    var jsonDoc = GetJsonDoc(resourceName);
-                    c.StoreAsync(jsonDoc).Wait();
+                    c.StoreAsync(testData).Wait();
                 }
             }
         }
 
-        private string GetJsonDoc(string resourceName)
+        private IEnumerable<string> GetTestData()
         {
-            var resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
+            var resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("KarinsFilmerTests.TestData.Testdata.json");
             if (resourceStream == null)
-                throw new Exception("Could not find testdata " + resourceName);
+                throw new Exception("Could not find testdata ");
 
-            var reader = new StreamReader(resourceStream, Encoding.UTF8, true, 1024, false);
-            var stringFromFile = reader.ReadToEnd();
-            return stringFromFile;
+            var jsonArrayString = new StreamReader(resourceStream).ReadToEnd();
+            var jsonArray = JsonConvert.DeserializeObject<JObject[]>(jsonArrayString);
+            return jsonArray.Select(j => j.ToString());
         }
-
     }
 }

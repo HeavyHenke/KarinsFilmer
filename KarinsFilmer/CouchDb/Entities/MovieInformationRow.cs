@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Web.Configuration;
+using Newtonsoft.Json;
 
 namespace KarinsFilmer.CouchDb.Entities
 {
@@ -18,5 +19,21 @@ namespace KarinsFilmer.CouchDb.Entities
 
         [JsonProperty("imdbId")]
         public string ImdbId { get; set; }
+
+
+        public override bool Equals(object obj)
+        {
+            return Equals((MovieInformationRow)obj);
+        }
+
+        public bool Equals(MovieInformationRow obj)
+        {
+            return ImdbId == obj.ImdbId;
+        }
+
+        public override int GetHashCode()
+        {
+            return ImdbId.GetHashCode();
+        }
     }
 }
